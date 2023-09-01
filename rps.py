@@ -1,4 +1,8 @@
+import setup
 import random
+from colorama import init as colorama_init
+from colorama import Fore
+from colorama import Style
 
 """This program plays a game of Rock, Paper, Scissors between two Players,
 and reports both Player's scores each round."""
@@ -23,6 +27,9 @@ class Player:
 
 
 class RandomComputerPlayer(Player):
+    def learn(self, my_move, their_move):
+        pass
+
     def move(self):
         # random move
         return random.choice(self.moves)
@@ -32,6 +39,15 @@ class ReflectComputerPlayer(Player):
     def move(self):
         # reflects the choice of the previous round
         return self.their_move
+
+
+class RockLovingComputerPlayer(Player):
+    def learn(self, my_move, their_move):
+        pass
+
+    def move(self):
+        # reflects the choice of the previous round
+        return "rock"
 
 
 class PredictiveComputerPlayer(Player):
@@ -80,6 +96,9 @@ class CycleComputerPlayer(Player):
 
 
 class HumanPlayer(Player):
+    def learn(self, my_move, their_move):
+        pass
+
     def move(self):
         while True:
             move_human = input("Rock, Paper, or Scissors? ")
@@ -109,14 +128,14 @@ class Game:
         # result of the match
         if self.beats(move1, move2):
             self.score_p1 += 1
-            winner = '*** YOU WIN ***'
+            winner = f'{Fore.GREEN}*** YOU WIN ***{Style.RESET_ALL}'
         elif move1 == move2:
             self.score_p1 = self.score_p1
             self.score_p2 = self.score_p2
-            winner = '*** TIE ***'
+            winner = f'{Fore.YELLOW}*** TIE ***{Style.RESET_ALL}'
         else:
             self.score_p2 += 1
-            winner = '*** COMPUTER WINS ***'
+            winner = f'{Fore.RED}*** COMPUTER WINS ***{Style.RESET_ALL}'
         # output the match information
         print(
             f"> You played : {move1}"
@@ -138,19 +157,20 @@ class Game:
             self.play_round()
         if self.score_p1 == self.score_p2:
             print(
-                f"\n--- The game ended in a tie! ---"
+                f"\n{Fore.YELLOW}--- The game ended in a tie!" +
+                f"---{Style.RESET_ALL}"
                 f"\nScore: You ( {self.score_p1} ),"
                 f"Computer ( {self.score_p2} )"
             )
         elif self.score_p1 > self.score_p2:
             print(
-                f"\n--- You Have Won! ---"
+                f"\n{Fore.GREEN}--- You Have Won! ---{Style.RESET_ALL}"
                 f"\nScore: You ( {self.score_p1} ), "
                 f"Computer ( {self.score_p2} )"
             )
         else:
             print(
-                f"\n--- Computer Has Won! ---"
+                f"\n{Fore.RED}--- Computer Has Won! ---{Style.RESET_ALL}"
                 f"\nScore: You ( {self.score_p1} ), "
                 f"Computer ( {self.score_p2} )"
             )
@@ -166,7 +186,8 @@ def setup_game():
             computer_players = [
                 RandomComputerPlayer(),
                 ReflectComputerPlayer(),
-                CycleComputerPlayer()
+                CycleComputerPlayer(),
+                RockLovingComputerPlayer()
             ]
             if int(number_rounds) > 5:
                 computer_players.append(PredictiveComputerPlayer())
